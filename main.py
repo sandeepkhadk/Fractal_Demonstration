@@ -8,7 +8,6 @@ pygame.init()
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Fractals Menu")
-depth = 0
 
 # Colors
 WHITE = (255, 255, 255)
@@ -47,49 +46,53 @@ class Button:
 def fractal_display(fractal_function, *args):
     screen.fill(SKY_BLUE)  # Clear the screen before drawing
     pygame.display.flip()
-
     fractal_function(*args)  # Draw the fractal
-
     pygame.display.flip()  # Ensure the fractal is shown
     pygame.time.delay(2000)  # Delay to ensure the fractal appears completely
 
 # Main menu function
 def main_menu():
-    button_width, button_height = 250, 75
-    button_one = Button(275, 200, button_width, button_height, "Tree")
-    button_two = Button(275, 300, button_width, button_height, "Snowflake")
-    button_three = Button(275, 400, button_width, button_height, "Sierpinski")
-    exit_button = Button(275, 500, button_width, button_height, "Exit")
+    button_width, button_height = 230, 75
+    button_one = Button(275, 125, button_width, button_height, "Tree")
+    button_two = Button(275, 225, button_width, button_height, "Snowflake")
+    button_three = Button(275, 325, button_width, button_height, "Sierpinski")
+    button_four = Button(275, 425, button_width, button_height, "Mandelbrot")  # New Mandelbrot button
+    exit_button = Button(275, 520, button_width, button_height, "Exit")
 
     while True:
         screen.fill(SKY_BLUE)
 
         # Draw title
         title = title_font.render("Fractals", True, BLACK)
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 100))
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 80))
         screen.blit(title, title_rect)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
             if button_one.handle_event(event):
                 import tree
                 fractal_display(tree.draw_fractal_tree)
-            elif button_two.handle_event(event):
-                import snowflake  # Import only when Snowflake button is clicked
-                fractal_display(snowflake.run_snowflake, depth)
-            elif button_three.handle_event(event):
-                import sierpinski  # Import only when Sierpinski button is clicked
-                fractal_display(sierpinski.run_fractal)
-            elif exit_button.handle_event(event):
+            if button_two.handle_event(event):
+                import snowflake as sf
+                fractal_display(sf.run_snowflake, sf.depth)
+            if button_three.handle_event(event):
+                import sierpinski as si
+                fractal_display(si.run_fractal)
+            if button_four.handle_event(event):  # Mandelbrot button event
+                import mandelbrot_set as ms
+                app = ms.App()
+                fractal_display(app.run)
+            if exit_button.handle_event(event):
                 pygame.quit()
                 sys.exit()
 
+        # Draw buttons
         button_one.draw(screen)
         button_two.draw(screen)
         button_three.draw(screen)
+        button_four.draw(screen)  # Draw Mandelbrot button
         exit_button.draw(screen)
 
         pygame.display.flip()
