@@ -1,6 +1,6 @@
 import pygame
 import math
-import conti
+import menu
 # Initialize Pygame
 pygame.init()
 
@@ -8,7 +8,7 @@ pygame.init()
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Koch Snowflake Fractal ❄️")
-
+depth=5
 WHITE = (255, 255, 255)
 BLUE = (100, 150, 255)
 BLACK = (0, 0, 0)
@@ -78,8 +78,8 @@ def run_snowflake(depth):
                 waiting_for_input = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting_for_input = False  # Exit after Enter key is pressed
-
-    conti.show_continue_exit_screen()
+    menu.show_continue_exit_screen()
 
 # Run with a fixed depth (Change to desired depth)
-run_snowflake(depth=5)
+if __name__=="__main__":
+    run_snowflake(depth)
