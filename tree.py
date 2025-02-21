@@ -2,7 +2,7 @@ import pygame
 import math
 import sys
 import random
-import conti
+import menu
 
 WIDTH, HEIGHT = 800, 600
 
@@ -20,6 +20,7 @@ WHITE = (255, 255, 255)
 
 # Coordinate Transformation
 def to_screen(pos):
+    """Convert tree coordinates to Pygame screen coordinates."""
     x, y = pos
     screen_x = WIDTH // 2 + x
     screen_y = HEIGHT // 2 - y
@@ -27,6 +28,7 @@ def to_screen(pos):
 
 # Recursive Tree Drawing
 def tree_commands(length, pos, angle, branch_color):
+    """Generates commands to draw a fractal tree using recursion."""
     if length < 10:
         return
     rad = math.radians(angle)
@@ -35,7 +37,7 @@ def tree_commands(length, pos, angle, branch_color):
     new_pos = (new_x, new_y)
 
     yield ("line", pos, new_pos, branch_color, 2)
-    yield ("circle", new_pos, 2, ORANGE)
+    yield ("circle", new_pos, 2, ORANGE) # Small leaf-like dot
 
     new_length = length * 0.75
     yield from tree_commands(new_length, new_pos, angle + 30, BROWN)
@@ -49,8 +51,9 @@ def draw_fractal_tree():
     cmd_gen = tree_commands(branch_length, start_pos, start_angle, GREEN)
     commands = []
 
+    running = True
     # Drawing the fractal tree
-    while True:
+    while running:
         clock.tick(60)
 
         for event in pygame.event.get():
@@ -59,8 +62,9 @@ def draw_fractal_tree():
                 return
 
         try:
-            cmd = next(cmd_gen)
-            commands.append(cmd)
+            for _ in range(3):  # Process 3 recursive steps per frame
+                cmd = next(cmd_gen)
+                commands.append(cmd)
         except StopIteration:
             break  # Break when the fractal tree is fully drawn
 
@@ -86,7 +90,7 @@ def draw_fractal_tree():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting_for_input = False  # Exit after Enter key is pressed
 
-    conti.show_continue_exit_screen()
+    menu.show_continue_exit_screen()
 # Ensure the script runs only when executed directly
 if __name__ == "__main__":
     draw_fractal_tree()
