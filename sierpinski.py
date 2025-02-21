@@ -1,6 +1,7 @@
 import pygame
 import time
-import conti
+import random
+import menu
 
 # Initialize Pygame
 pygame.init()
@@ -8,20 +9,36 @@ pygame.init()
 # Screen setup
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sierpinski Triangle Fractal ")
+pygame.display.set_caption("Sierpinski Triangle Fractal - Step by Step")
 
 WHITE = (255, 255, 255)
 BACKGROUND_COLOR = (0, 0, 0)
 
 count = 0
 
+# Function to get a rainbow color based on depth
+def get_color(depth):
+    colors = [
+        (255, 0, 0),   # Red
+        (255, 165, 0), # Orange
+        (255, 255, 0), # Yellow
+        (0, 255, 0),   # Green
+        (0, 0, 255),   # Blue
+        (75, 0, 130),  # Indigo
+        (238, 130, 238) # Violet
+    ]
+    return colors[depth % len(colors)]  # Cycle through rainbow colors
+
 # Function to draw the Sierpinski Triangle step by step
 def sierpinski(x, y, size, depth):
     if depth == 0:
         return
     else:
-        # Draw the triangle
-        pygame.draw.polygon(screen, WHITE, [(x, y),
+        # Get a color based on depth
+        color = get_color(depth)
+
+        # Draw the triangle with the color
+        pygame.draw.polygon(screen, color, [(x, y),
                                             (x + size, y),
                                             (x + size / 2, y - size)], 1)
         pygame.display.update()  # Update after drawing the triangle
@@ -56,7 +73,8 @@ def run_fractal():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 waiting_for_input = False  # Exit after Enter key is pressed
 
-    conti.show_continue_exit_screen()
+    menu.show_continue_exit_screen()
+
 # Run the fractal
 if __name__ == "__main__":
     run_fractal()
